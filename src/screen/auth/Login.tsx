@@ -8,14 +8,16 @@ import {
   Text,
   Platform,
 } from 'react-native';
+import Notify from '../../components/app/Notify';
+import auth from '@react-native-firebase/auth';
 // @ts-ignore
 import Email from '../../../assets/svg/mail.svg';
 // @ts-ignore
 import Lock from '../../../assets/svg/lock.svg';
 // @ts-ignore
 import Logo from '../../../assets/svg/logo.svg';
-// @ts-ignore
-import Google from '../../../assets/svg/g.svg';
+// // @ts-ignore
+// import Google from '../../../assets/svg/g.svg';
 // @ts-ignore
 import Open from '../../../assets/svg/open.svg';
 // @ts-ignore
@@ -25,10 +27,85 @@ const Login = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [secure, setSecure] = useState<boolean>(true);
+  const [show, setShowing] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>('');
+  const [signIn, setSignIn] = useState<boolean>(false);
 
   const pass = useRef<any>();
 
-  const authEmail = (): void => {};
+  const signUp = (): void => {
+    auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(() => {
+        console.log('User account created & signed in!');
+      })
+      .catch(error => {
+        if (error.code === 'auth/email-already-in-use') {
+          setMessage('That email address is already in use');
+          console.log('That email address is already in use!');
+          setShowing(true);
+        }
+
+        if (error.code === 'auth/invalid-email') {
+          setMessage('That email address is invalid!');
+          setShowing(true);
+          console.log('That email address is invalid!');
+        }
+        if (error.code === 'auth/weak-password') {
+          setMessage('The given password is invalid');
+          setShowing(true);
+          console.log('The given password is invalid');
+        }
+
+        console.error(error.code);
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setShowing(false);
+        }, 3000);
+      });
+  };
+
+  const signInEmail = (): void => {
+    auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(() => {
+        console.log('User account created & signed in!');
+      })
+      .catch(error => {
+        if (error.code === 'auth/email-already-in-use') {
+          setMessage('That email address is already in use');
+          console.log('That email address is already in use!');
+          setShowing(true);
+        }
+
+        if (error.code === 'auth/invalid-email') {
+          setMessage('That email address is invalid!');
+          setShowing(true);
+          console.log('That email address is invalid!');
+        }
+        if (error.code === 'auth/weak-password') {
+          setMessage('The given password is invalid');
+          setShowing(true);
+          console.log('The given password is invalid');
+        }
+
+        console.error(error.code);
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setShowing(false);
+        }, 3000);
+      });
+  };
+
+  const authEmail = (): void => {
+    if (signIn) {
+      signInEmail();
+    } else {
+      signUp();
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -44,7 +121,7 @@ const Login = () => {
               placeholder="Електронна пошта"
               placeholderTextColor="#C2956E"
               selectionColor={'#C2956E'}
-              value={email}
+              value={email.toLowerCase()}
               onChangeText={email => setEmail(email)}
               onEndEditing={() => {
                 pass.current.focus();
@@ -82,17 +159,24 @@ const Login = () => {
           style={styles.btn}
           onPress={authEmail}
           activeOpacity={0.8}>
-          <Text style={styles.text}>Авторизуватись</Text>
+          <Text style={styles.text}>{signIn ? 'Вхід' : 'Реєстрація'}</Text>
         </TouchableOpacity>
-        <View style={styles.orBlock}>
-          <View style={styles.line} />
-          <Text style={styles.orText}>або</Text>
-          <View style={styles.line} />
+        <View style={styles.cheepsContainer}>
+          <TouchableOpacity
+            style={{opacity: signIn ? 0.5 : 1}}
+            onPress={() => setSignIn(false)}
+            activeOpacity={0.8}>
+            <Text style={styles.orText}>Реєстрація</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{opacity: !signIn ? 0.5 : 1}}
+            onPress={() => setSignIn(true)}
+            activeOpacity={0.8}>
+            <Text style={styles.orText}>Вхід</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity activeOpacity={0.8} style={styles.googleBtn}>
-          <Google width={60} height={60} />
-        </TouchableOpacity>
       </SafeAreaView>
+      <Notify show={show} message={message} />
     </View>
   );
 };
@@ -173,6 +257,14 @@ const styles = StyleSheet.create({
   secureBtn: {
     position: 'absolute',
     right: 10,
+  },
+  cheepsContainer: {
+    width: 320,
+    marginTop: 30,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 50,
   },
 });
 
