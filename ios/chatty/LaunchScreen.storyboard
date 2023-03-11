@@ -21,7 +21,7 @@
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
-                        <color key="backgroundColor" red="0.24465423820000001" green="0.31355795260000002" blue="0.3254968822" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="backgroundColor" red="0.89772742989999998" green="0.88251346350000004" blue="0.87058430909999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
                             <constraint firstItem="Bcu-3y-fUS" firstAttribute="trailing" secondItem="NFB-OG-ZCH" secondAttribute="trailing" id="P8A-bF-rlg"/>
                             <constraint firstItem="Bcu-3y-fUS" firstAttribute="bottom" secondItem="NFB-OG-ZCH" secondAttribute="bottom" id="pnj-e2-9r0"/>
@@ -36,6 +36,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="launch_screen" width="107.33333587646484" height="233"/>
+        <image name="launch_screen" width="97.333335876464844" height="211"/>
     </resources>
 </document>

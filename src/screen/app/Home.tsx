@@ -1,25 +1,19 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, StyleSheet, Button} from 'react-native';
 import auth from '@react-native-firebase/auth';
+import useUserStore from '../../store/user';
+// import useBearStore from '../../store/user';
 
 const Home = () => {
-  React.useEffect(() => {
-    auth().onAuthStateChanged(user => {
-      if (user) {
-        console.log(user)
-      } else {
-      }
-    });
+  const me = useUserStore(state => state.me);
+  const getMe = useUserStore(state => state.getMe);
+  useEffect(() => {
+    getMe()
   }, [])
-  const logout = (): void => {
-    auth()
-      .signOut()
-      .then(() => console.log('User signed out!'));
-  };
   return (
     <View>
-      <Text>Hello!</Text>
-      <Button onPress={logout} title="Logout" />
+      <Text>Hello! {me.email}</Text>
+      <Button onPress={() => auth().signOut()} title="Logout" />
     </View>
   );
 };
