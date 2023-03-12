@@ -14,6 +14,7 @@ import Me from '../screen/app/Me';
 import Edit from '../screen/app/Edit';
 import Messages from '../screen/app/Messages';
 import User from '../screen/app/User';
+import Search from '../screen/app/Search';
 // @ts-ignore
 import Back from '../../assets/svg/back.svg';
 // @ts-ignore
@@ -26,8 +27,6 @@ const AppStack = () => {
   useEffect(() => {
     getMe();
   }, []);
-  // @ts-ignore
-  // @ts-ignore
   return (
     <Stack.Navigator
       initialRouteName="Home"
@@ -118,6 +117,33 @@ const AppStack = () => {
       <Stack.Screen
         name="User"
         component={User}
+        options={({navigation}) => ({
+          headerRight: () => (
+            <Pressable
+              style={styles.avatar}
+              onPress={() => navigation.navigate('Me')}>
+              {me.photoURL ? (
+                <Image source={me.photoURL} />
+              ) : (
+                <Text
+                  style={{
+                    textTransform: 'uppercase',
+                    fontSize: 20,
+                    color: '#2A2F33',
+                  }}>
+                  {me.email ? me?.email[0] : 'A'}
+                </Text>
+              )}
+            </Pressable>
+          ),
+          headerLeft: () => (
+            <Back onPress={() => navigation.goBack()} width={30} height={30} />
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="Search"
+        component={Search}
         options={({navigation}) => ({
           headerRight: () => (
             <Pressable
